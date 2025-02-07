@@ -1,0 +1,31 @@
+services:
+    app:
+        image: javascript-lognegar-example:latest
+        ports:
+            - "3090:3090"
+        depends_on:
+            - db
+            - otel-collector
+
+    db:
+        image: postgres:17-alpine
+        container_name: postgres
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+            POSTGRES_DB: todos_db
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+
+    otel-collector:
+        image: otel/opentelemetry-collector-contrib:0.117.0
+        volumes:
+            - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+        ports:
+            - 4317:4317
+            - 4318:4318
+
+volumes:
+    postgres_data:

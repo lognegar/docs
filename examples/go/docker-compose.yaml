@@ -1,0 +1,19 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "3090:3090"
+        depends_on:
+            - otel-collector
+        environment:
+            - OTEL_BASE_URL=http://otel-collector:4318/v1
+
+    otel-collector:
+        image: otel/opentelemetry-collector-contrib:0.117.0
+        volumes:
+            - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+        ports:
+            - 4317:4317
+            - 4318:4318
