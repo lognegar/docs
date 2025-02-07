@@ -19,14 +19,10 @@ exporters:
         headers:
             lognegar-api-key: <YOUR_API_KEY>
         encoding: json
-    debug: # Log to stdout for testing
-        verbosity: detailed
     otlphttp/traces:
         endpoint: https://api.lognegar.ir/api
         headers:
             lognegar-api-key: <YOUR_API_KEY>
-        tls:
-            insecure: true
     otlphttp/metrics:
         endpoint: https://api.lognegar.ir/api
         headers:
