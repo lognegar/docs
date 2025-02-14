@@ -9,16 +9,14 @@ receivers:
 processors:
     batch:
         timeout: 10s
-        send_batch_max_size: 1 # Send only one metric per batch
+        send_batch_max_size: 1
         send_batch_size: 1
-#    send_batch_max_interval: 1s  # Send every second if there are metrics
 
 exporters:
     otlphttp/logs:
         endpoint: https://api.lognegar.ir/api
         headers:
             lognegar-api-key: <YOUR_API_KEY>
-        encoding: json
     otlphttp/traces:
         endpoint: https://api.lognegar.ir/api
         headers:
@@ -27,7 +25,6 @@ exporters:
         endpoint: https://api.lognegar.ir/api
         headers:
             lognegar-api-key: <YOUR_API_KEY>
-        encoding: json
 
 service:
     pipelines:

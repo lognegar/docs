@@ -11,20 +11,16 @@ processors:
         timeout: 10s
 
 exporters:
-    debug:
-        verbosity: detailed
     otlphttp/logs:
         endpoint: https://api.lognegar.ir/api
         headers:
             lognegar-api-key: <YOUR_API_KEY>
     otlphttp/traces:
         endpoint: https://api.lognegar.ir/api
-        encoding: json
         headers:
             lognegar-api-key: <YOUR_API_KEY>
     otlphttp/metrics:
         endpoint: https://api.lognegar.ir/api
-        encoding: json
         headers:
             lognegar-api-key: <YOUR_API_KEY>
 service:
