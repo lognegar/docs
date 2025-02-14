@@ -1,0 +1,56 @@
+mode: deployment
+image:
+  repository: "otel/opentelemetry-collector-k8s"
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+# Replace your lognegar-api-key: <YOUR_API_KEY>
+config:
+  receivers:
+      otlp:
+          protocols:
+              http:
+                  endpoint: 0.0.0.0:4318
+              grpc:
+                  endpoint: 0.0.0.0:4317
+      jaeger:
+      prometheus:
+      zipkin:
+  processors:
+      batch:
+          timeout: 10s
+          send_batch_max_size: 1
+          send_batch_size: 1
+  exporters:
+      otlphttp/logs:
+          endpoint: https://api.lognegar.ir/api
+          headers:
+              lognegar-api-key: <YOUR_API_KEY>
+      otlphttp/traces:
+          endpoint: https://api.lognegar.ir/api
+          headers:
+              lognegar-api-key: <YOUR_API_KEY>
+      otlphttp/metrics:
+          endpoint: https://api.lognegar.ir/api
+          headers:
+              lognegar-api-key: <YOUR_API_KEY>
+  service:
+      pipelines:
+          logs:
+              receivers: [otlp]
+              processors: [batch]
+              exporters: [otlphttp/logs]
+          traces:
+              receivers: [otlp]
+              processors: [batch]
+              exporters: [otlphttp/traces]
+          metrics:
+              receivers: [otlp]
+              processors: [batch]
+              exporters: [otlphttp/metrics]

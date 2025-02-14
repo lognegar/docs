@@ -1,0 +1,13 @@
+kubeContext: <KUBERNETES_CONTEXT>
+
+repositories:
+  - name: open-telemetry
+    url: https://open-telemetry.github.io/opentelemetry-helm-charts
+
+releases:
+  - name: open-telemetry
+    namespace: open-telemetry
+    chart: open-telemetry/opentelemetry-collector
+    version: "0.116.0"
+    values:
+      - values.yaml
