@@ -1,0 +1,42 @@
+mode: daemonset
+image:
+  repository: "otel/opentelemetry-collector-k8s"
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+# Automatically configures the filelog receiver 
+# and adds the required volumes to fetch pod and container logs
+presets:
+  logsCollection:
+    enabled: true
+
+# Replace your lognegar-api-key: <YOUR_API_KEY>
+config:
+  receivers:
+    jaeger:
+    prometheus:
+    zipkin:
+  processors:
+    memory_limiter:
+      check_interval: 1s
+      limit_mib: 1000
+      spike_limit_mib: 200
+  exporters:
+    otlphttp/logs:
+        endpoint: https://api.lognegar.ir/api
+        headers:
+            lognegar-api-key: <YOUR_API_KEY>
+  service:
+    pipelines:
+      logs:
+        receivers: [filelog]
+        processors: [memory_limiter]
+        exporters: [otlphttp/logs]
+      metrics:
+      traces:
