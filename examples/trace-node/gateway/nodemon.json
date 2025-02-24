@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "js,ts,json",
+  "exec": "npm run preview",
+  "ignore": ["node_modules"]
+}
