@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+    db:
+        image: postgres:latest
+        restart: always
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: auth_db
+        ports:
+            - "5423:5432"
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+    gateway:
+        build: ./gateway/.
+        depends_on:
+            - db
+            - otel-collector
+        environment:
+            PORT: 3000
+            AUTH_SERVICE_BASE_URL: http://auth-service:3001
+            OTEL_BASE_URL: http://otel-collector:4318/v1
+        ports:
+            - "3000:3000"
+    auth-service:
+        build: ./auth-service/.
+        depends_on:
+            - db
+            - otel-collector
+        environment:
+            PORT: 3001
+            DATABASE_HOST: db
+            DATABASE_PORT: 5432
+            DATABASE_USER: postgres
+            DATABASE_PASSWORD: postgres
+            DATABASE_NAME: auth_db
+            OTEL_BASE_URL: http://otel-collector:4318/v1
+            JWT_SECRET: "YOUR_SECRET"
+        ports:
+            - "3001:3001"
+
+    otel-collector:
+        image: otel/opentelemetry-collector-contrib:0.117.0
+        volumes:
+            - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+        ports:
+            - 4317:4317
+            - 4318:4318
+volumes:
+    pgdata:
