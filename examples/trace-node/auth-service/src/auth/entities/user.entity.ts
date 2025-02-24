@@ -1,4 +1,3 @@
-// src/auth/user.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
